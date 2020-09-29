@@ -1,0 +1,41 @@
+{
+  "name": "confrariaweb/laravel-site",
+  "description": "A laravel site package for Confraria Web systems",
+  "keywords": [
+    "site",
+    "framework",
+    "laravel"
+  ],
+  "license": "MIT",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Rafael Zingano",
+      "email": "confrariaweb@gmail.com"
+    }
+  ],
+  "require": {
+    "confrariaweb/laravel-vendor": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Confrariaweb\\Site\\": "src"
+    },
+    "files": [
+      "src/Helpers/domainAccount.php",
+      "src/Helpers/domainTemplatePackage.php",
+      "src/Helpers/domainSite.php",
+      "src/Helpers/domainTemplate.php",
+      "src/Helpers/siteUrl.php",
+      "src/Helpers/configuration.php"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Confrariaweb\\Site\\Providers\\SiteServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev"
+}
