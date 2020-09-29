@@ -15,6 +15,7 @@
     }
   ],
   "require": {
+    "confrariaweb/laravel-domain": "dev-master",
     "confrariaweb/laravel-vendor": "dev-master"
   },
   "autoload": {
