@@ -8,9 +8,9 @@ if (!function_exists('domain_site')) {
         $domain_site = Cache::remember($name_cache, 720, function () use ($domain) {
             return DB::table('sites')
                 ->select('sites.*')
-                ->Join('site_domains', function ($join) use ($domain) {
-                    $join->on('sites.id', '=', 'site_domains.site_id')
-                        ->where('site_domains.domain', $domain);
+                ->Join('domains', function ($join) use ($domain) {
+                    $join->on('sites.id', '=', 'domains.site_id')
+                        ->where('domains.domain', $domain);
                 })->first();
         });
         return $domain_site;

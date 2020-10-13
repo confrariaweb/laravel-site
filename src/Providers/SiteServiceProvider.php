@@ -1,27 +1,21 @@
 <?php
 
-namespace Confrariaweb\Site\Providers;
+namespace ConfrariaWeb\Site\Providers;
 
+use ConfrariaWeb\Site\Models\Site;
+use ConfrariaWeb\Site\Observers\SiteObserver;
+use ConfrariaWeb\Vendor\Traits\ProviderTrait;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
-use Confrariaweb\Site\Repositories\Contracts\SiteContract;
-use Confrariaweb\Site\Repositories\Contracts\SiteConfigurationContract;
-use Confrariaweb\Site\Repositories\Eloquent\SiteEloquent;
-use Confrariaweb\Site\Repositories\Eloquent\SiteConfigurationEloquent;
-use Confrariaweb\Site\Services\SiteService;
-use Confrariaweb\Site\Services\SiteConfigurationService;
-use App;
+use ConfrariaWeb\Site\Contracts\SiteContract;
+use ConfrariaWeb\Site\Repositories\SiteRepository;
+use ConfrariaWeb\Site\Services\SiteService;
 
 class SiteServiceProvider extends ServiceProvider
 {
-    
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    //protected $defer = true;
-    
+    use ProviderTrait;
+
     /**
      * Bootstrap services.
      *
@@ -29,30 +23,14 @@ class SiteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(!App::runningInConsole()) {
-            abort_unless(domain_account(), 404);
-        }
+        $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
+        $this->loadMigrationsFrom(__DIR__ . '/../../databases/Migrations');
+        $this->loadViewsFrom(__DIR__ . '/../Views/backend', 'site');
+        $this->loadViewsFrom(__DIR__ . '/../Views/frontend', 'siteFrontend');
+        $this->registerSeedsFrom(__DIR__ . '/../../databases/Seeds');
+        $this->publishes([__DIR__ . '/../../config/cw_site.php' => config_path('cw_site.php')], 'config');
 
-        /*Testar se vai ser sobrescrito quando houver rotas no proprio template*/
-        $this->loadRoutesFrom(__DIR__ . '/../Routes/sites/site.php');
-        /*
-         * Verifica se existe o arquivo de rotas próprio do template
-         */
-        if(!App::runningInConsole()) {
-            $routeSite = base_path('vendor/confrariaweb/' . domain_template_package() . '/src/Routes/web.php');
-            if (file_exists($routeSite)) {
-                $this->loadRoutesFrom($routeSite);
-            }
-            /*
-            else{
-                $this->loadRoutesFrom(__DIR__ . '/../Routes/sites/site.php');
-            }
-            */
-        }
-        $this->loadRoutesFrom(__DIR__ . '/../Routes/sites/web.php');
-        $this->loadMigrationsFrom(__DIR__ . '/../Databases/Migrations/sites');
-        $this->loadTranslationsFrom(__DIR__ . '/../Translations/sites', 'site');
-        $this->loadViewsFrom(__DIR__ . '/../Views/sites', 'site');
+        Site::observe(SiteObserver::class);
     }
 
     /**
@@ -62,24 +40,10 @@ class SiteServiceProvider extends ServiceProvider
      */
     public function register()
     {
-       $this->app->bind(SiteContract::class, SiteEloquent::class);
+        $this->app->bind(SiteContract::class, SiteRepository::class);
         $this->app->singleton('SiteService', function ($app) {
             return new SiteService($app->make(SiteContract::class));
         });
     }
-    
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    /*
-    public function provides()
-    {
-        return [
-            'SiteService'
-        ];
-    }
-    */
-    
+
 }

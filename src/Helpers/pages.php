@@ -8,9 +8,9 @@ if (!function_exists('pages')) {
                 $join->on('pages.id', '=', 'page_site.page_id');
             })->Join('sites', function($join){
                 $join->on('page_site.site_id', '=', 'sites.id');
-            })->Join('site_domains', function($join){
-                $join->on('sites.id', '=', 'site_domains.site_id')
-                    ->where('site_domains.domain', parse_url(url()->current())['host']);
+            })->Join('domains', function($join){
+                $join->on('sites.id', '=', 'domains.site_id')
+                    ->where('domains.domain', parse_url(url()->current())['host']);
             })->Join('page_types', function($join){
                 $join->on('pages.page_type_id', '=', 'page_types.id');
             })->Join('accounts', function($join){

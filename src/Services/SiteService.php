@@ -1,110 +1,52 @@
 <?PHP
 
-namespace Confrariaweb\Site\Services;
+namespace ConfrariaWeb\Site\Services;
 
-use Confrariaweb\Site\Repositories\Contracts\SiteContract;
-use Validator;
-use Auth;
+use ConfrariaWeb\Option\Traits\OptionServiceTrait;
+use ConfrariaWeb\Site\Contracts\SiteContract;
+use ConfrariaWeb\Site\Models\Site;
+use ConfrariaWeb\Vendor\Traits\ServiceTrait;
+use Illuminate\Support\Facades\Config;
 
 class SiteService
 {
+    use OptionServiceTrait;
+    use ServiceTrait;
 
     private $site;
 
     public function __construct(SiteContract $site)
     {
-        $this->site = $site;
+        $this->obj = $site;
     }
 
-    function all($columns = '*')
-    {
-        return $this->site->all($columns);
+    public function findByDomain($host){
+        return $this->obj->findByDomain($host);
     }
 
-    function where($data)
+    public function getOptions(Site $site = NULL, $options = [])
     {
-        return $this->site->where($data);
+        $options = collect(Config::get('cw_site.options', []));
+        if($site) {
+            $options = resolve('OptionService')->option_decode($options, $site);
+        }
+        return $options;
     }
 
-    function find($id)
+    public function prepareData(array $data, $obj = NULL)
     {
-        $data = $this->site->find($id);
+        if($obj && isset($data['user_id'])){
+            unset($data['user_id']);
+        }
+
+        $options = collect();
+        if(isset($data['options'])){
+            $folder = isset($obj)? 'sites/' . $obj->id : 'sites';
+            $attributes = ['folder' => $folder];
+            $options = resolve('OptionService')->option_encode($data['options'], $attributes);
+        }
+        $data['options'] = $options;
         return $data;
-    }
-
-    function findByDomain($domain)
-    {
-        $data = $this->site->findDomain($domain);
-        return $data;
-    }
-
-    function findThis()
-    {
-        $data = $this->site->findThis();
-        return $data;
-    }
-
-    function create($data)
-    {
-        Validator::make($data, [
-            'title' => 'required|max:255',
-        ]);
-        $account = domain_account();
-        $data['account_id'] = isset($data['account_id']) ? $data['account_id'] : $account->id;
-        $data['user_id'] = isset($data['user_id']) ? $data['user_id'] : Auth::user()->id;
-        //$data['options'] = resolve('OptionService')->optionEnconde(isset($data['options'])? $data['options'] : []);
-        $site = $this->site->create($data);
-        if (isset($data['domain'])) {
-            $this->domainAdd($data['domain'], $site->id);
-        }
-        if (isset($data['domains']) && is_array($data['domains'])) {
-            $this->domainAdd($data['domains'], $site->id);
-        }
-        return $site;
-    }
-
-    function update($data, $id)
-    {
-        Validator::make($data, [
-            'name' => 'required|max:255',
-        ]);
-        $data['sites'][] = $id;
-        $data['path'] = 'sites/' . $id . '/images';
-        $optionJson = $this->site->find($id)->options;
-        $data['options'] = resolve('OptionService')->optionEnconde($optionJson, $data);
-        $site = $this->site->update($data, $id);
-
-
-
-        if (isset($data['domain'])) {
-            $this->domainAdd($data['domain'], $site->id);
-        }
-        if (isset($data['domains']) && is_array($data['domains'])) {
-            $this->domainAdd($data['domains'], $site->id);
-        }
-        return $site;
-    }
-
-    private function options($site_id, $options, $r = null)
-    {
-        if(isset($options['file'])) {
-            $data['path'] = 'sites/' . $site_id . '/images';
-            $FileService = resolve('FileService')->updateOrCreate($data, false);
-        }
-
-    }
-
-    private function domainAdd($domains, $site_id, $r = null)
-    {
-        if (isset($domains)) {
-            $data['site_id'] = $site_id;
-            $domains = (!is_array($domains)) ? explode(',', $domains) : $domains;
-            foreach ($domains as $d) {
-                $data['domain'] = $d;
-                $r[] = resolve('DomainService')->create($data, false);
-            }
-        }
-        return $r;
     }
 
 }

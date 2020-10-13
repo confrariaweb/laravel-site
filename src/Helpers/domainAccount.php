@@ -10,9 +10,9 @@ if (!function_exists('domain_account')) {
                 ->select('accounts.*')
                 ->Join('sites', function ($join) {
                     $join->on('accounts.id', '=', 'sites.account_id');
-                })->Join('site_domains', function ($join) use ($domain) {
-                    $join->on('sites.id', '=', 'site_domains.site_id')
-                        ->where('site_domains.domain', $domain);
+                })->Join('domains', function ($join) use ($domain) {
+                    $join->on('sites.id', '=', 'domains.site_id')
+                        ->where('domains.domain', $domain);
                 })->first();
         });
         return $domain_account;

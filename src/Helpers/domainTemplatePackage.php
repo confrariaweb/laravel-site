@@ -7,9 +7,9 @@ if (!function_exists('domain_template_package')) {
         return DB::table('templates')
             ->select('templates.package')
             ->join('sites', 'templates.id', '=', 'sites.template_id')
-            ->join('site_domains', function ($join) use ($domain) {
-                $join->on('sites.id', '=', 'site_domains.site_id')
-                    ->where('site_domains.domain', $domain);
+            ->join('domains', function ($join) use ($domain) {
+                $join->on('sites.id', '=', 'domains.site_id')
+                    ->where('domains.domain', $domain);
             })->first()->package;
     }
 }
