@@ -2,10 +2,14 @@
 
 namespace ConfrariaWeb\Site\Models;
 
+use ConfrariaWeb\Account\Traits\AccountTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Site extends Model
 {
+
+    use AccountTrait;
+
     protected $fillable = [
         'title', 'user_id', 'status', 'template_id', 'options'
     ];

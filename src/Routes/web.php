@@ -2,18 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('admin')
+Route::prefix('dashboard')
     ->namespace('ConfrariaWeb\Site\Controllers\Backend')
-    ->name('admin.')
+    ->name('dashboard.')
     ->middleware(['web', 'auth'])
     ->group(function () {
-
         Route::prefix('sites')
             ->name('sites.')
             ->group(function () {
                 Route::get('datatable', 'SiteController@datatables')->name('datatables');
             });
-
         Route::resource('sites', 'SiteController');
     });
 

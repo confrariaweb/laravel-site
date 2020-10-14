@@ -15,7 +15,7 @@
             $('#sites-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('admin.sites.datatables') }}',
+                ajax: '{{ route('dashboard.sites.datatables') }}',
                 keys: !0,
                 select: {
                     style: "multi"

@@ -30,23 +30,24 @@ class SiteController extends Controller
             })
             ->addColumn('action', function ($site) {
                 return '<div class="btn-group btn-group-sm float-right" role="group">
-                <a href="' . route('admin.sites.show', $site->id) . '" class="btn btn-info">
-                    <i class="glyphicon glyphicon-eye"></i> Ver
-                </a>
-                <a href="' . route('admin.sites.edit', $site->id) . '" class="btn btn-primary">
-                    <i class="glyphicon glyphicon-edit"></i> Editar
-                </a>
-                <a class="btn btn-danger" href="' . route('admin.sites.destroy', $site->id) . '" onclick="event.preventDefault();
-                    document.getElementById(\'sites-destroy-form-' . $site->id . '\').submit();">
-                    Deletar
-                </a>
-                <form id="sites-destroy-form-' . $site->id . '" action="' . route('admin.sites.destroy', $site->id) . '" method="POST" style="display: none;">
-                    <input name="_method" type="hidden" value="DELETE">    
-                    <input name="_token" type="hidden" value="' . csrf_token() . '">
-                    <input type="hidden" name="id" value="' . $site->id . '">
-                </form>
-            </div>';
+                    <a href="' . route('dashboard.sites.show', $site->id) . '" class="btn btn-info">
+                        <i class="glyphicon glyphicon-eye"></i> Ver
+                    </a>
+                    <a href="' . route('dashboard.sites.edit', $site->id) . '" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-edit"></i> Editar
+                    </a>
+                    <a class="btn btn-danger" href="' . route('dashboard.sites.destroy', $site->id) . '" onclick="event.preventDefault();
+                        document.getElementById(\'sites-destroy-form-' . $site->id . '\').submit();">
+                        Deletar
+                    </a>
+                    <form id="sites-destroy-form-' . $site->id . '" action="' . route('dashboard.sites.destroy', $site->id) . '" method="POST" style="display: none;">
+                        <input name="_method" type="hidden" value="DELETE">    
+                        <input name="_token" type="hidden" value="' . csrf_token() . '">
+                        <input type="hidden" name="id" value="' . $site->id . '">
+                    </form>
+                </div>';
             })
+            ->rawColumns(['action', 'domains'])
             ->make();
     }
 
@@ -80,7 +81,7 @@ class SiteController extends Controller
     public function store(StoreSiteRequest $request)
     {
         $id = resolve('SiteService')->create($request->all())->id;
-        return redirect()->route('admin.sites.edit', $id)
+        return redirect()->route('dashboard.sites.edit', $id)
             ->with('status', __('Site criado com sucesso!'));
     }
 
@@ -118,7 +119,7 @@ class SiteController extends Controller
     public function update(UpdateSiteRequest $request, $id)
     {
         resolve('SiteService')->update($request->all(), $id);
-        return redirect()->route('admin.sites.edit', $id)
+        return redirect()->route('dashboard.sites.edit', $id)
             ->with('status', __('Site editado com sucesso!'));
     }
 

@@ -20,14 +20,15 @@ class SiteService
         $this->obj = $site;
     }
 
-    public function findByDomain($host){
+    public function findByDomain($host)
+    {
         return $this->obj->findByDomain($host);
     }
 
     public function getOptions(Site $site = NULL, $options = [])
     {
         $options = collect(Config::get('cw_site.options', []));
-        if($site) {
+        if ($site) {
             $options = resolve('OptionService')->option_decode($options, $site);
         }
         return $options;
@@ -35,13 +36,13 @@ class SiteService
 
     public function prepareData(array $data, $obj = NULL)
     {
-        if($obj && isset($data['user_id'])){
+        if ($obj && isset($data['user_id'])) {
             unset($data['user_id']);
         }
 
         $options = collect();
-        if(isset($data['options'])){
-            $folder = isset($obj)? 'sites/' . $obj->id : 'sites';
+        if (isset($data['options'])) {
+            $folder = isset($obj) ? 'sites/' . $obj->id : 'sites';
             $attributes = ['folder' => $folder];
             $options = resolve('OptionService')->option_encode($data['options'], $attributes);
         }
