@@ -19,10 +19,7 @@ class SiteController extends Controller
     {
         abort_unless($this->site, 404);
         abort_unless($this->site->template, 404);
-        if (isset($this->site->template->service)) {
-            $this->data = resolve($this->site->template->service)->home();
-        }
-        return view(cwView('home.home'), $this->data);
+        return view(cwView('home.index'), $this->data);
     }
 
 }

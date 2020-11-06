@@ -1,11 +1,15 @@
 <?php
 
 return [
-    'options' => [
-        'logotipo' => [
-            'type' => 'file',
-            'label' => 'Logotipo',
-            'placeholder' => 'Logotipo'
+    'form' => [
+        'files' => [
+            'logotipo' => [
+                'name' => 'logotipo',
+                'type' => 'image',
+                'group' => 'logotipo',
+                'label' => 'Logotipo',
+                'placeholder' => 'Logotipo'
+            ]
         ]
     ]
 ];

@@ -25,8 +25,9 @@ class SiteRepository implements SiteContract
         }
     }
 
-    public function findByDomain($host){
-        return $this->obj->whereHas('domains', function (Builder $query) use($host) {
+    public function findByDomain($host)
+    {
+        return $this->obj->whereHas('domains', function (Builder $query) use ($host) {
             $query->where('domain', $host);
         })->first();
     }

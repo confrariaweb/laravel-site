@@ -27,7 +27,7 @@ class SiteServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../../databases/Migrations');
         $this->loadViewsFrom(__DIR__ . '/../Views/backend', 'site');
         $this->loadViewsFrom(__DIR__ . '/../Views/frontend', 'siteFrontend');
-        $this->registerSeedsFrom(__DIR__ . '/../../databases/Seeds');
+        //$this->registerSeedsFrom(__DIR__ . '/../../databases/Seeds');
         $this->publishes([__DIR__ . '/../../config/cw_site.php' => config_path('cw_site.php')], 'config');
 
         Site::observe(SiteObserver::class);

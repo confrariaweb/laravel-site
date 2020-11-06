@@ -3,12 +3,14 @@
 namespace ConfrariaWeb\Site\Models;
 
 use ConfrariaWeb\Account\Traits\AccountTrait;
+use ConfrariaWeb\File\Traits\FileTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class Site extends Model
 {
 
     use AccountTrait;
+    use FileTrait;
 
     protected $fillable = [
         'title', 'user_id', 'status', 'template_id', 'options'

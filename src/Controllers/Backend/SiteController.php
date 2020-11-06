@@ -5,6 +5,7 @@ namespace ConfrariaWeb\Site\Controllers\Backend;
 use ConfrariaWeb\Site\Requests\StoreSiteRequest;
 use ConfrariaWeb\Site\Requests\UpdateSiteRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Config;
 use Yajra\DataTables\DataTables;
 
 class SiteController extends Controller
@@ -69,6 +70,7 @@ class SiteController extends Controller
      */
     public function create()
     {
+        $this->data['files'] = Config::get('cw_site.form.files');
         return view(cwView('sites.create', true), $this->data);
     }
 
@@ -104,6 +106,7 @@ class SiteController extends Controller
      */
     public function edit($id)
     {
+        $this->data['files'] = Config::get('cw_site.form.files');
         $this->data['site'] = $site = resolve('SiteService')->find($id);
         $this->data['options'] = resolve('SiteService')->getOptions($site);
         return view(cwView('sites.edit', true), $this->data);

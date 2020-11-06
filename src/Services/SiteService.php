@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Config;
 
 class SiteService
 {
-    use OptionServiceTrait;
     use ServiceTrait;
 
     private $site;
@@ -29,9 +28,17 @@ class SiteService
     {
         $options = collect(Config::get('cw_site.options', []));
         if ($site) {
-            $options = resolve('OptionService')->option_decode($options, $site);
+
         }
         return $options;
+    }
+
+    public function executeAfter(array $data, $obj = NULL)
+    {
+        if (isset($data['files'])) {
+            $path = (existsAccount()) ? 'accounts/' . account()->id . '/sites/' . $obj->id : 'sites/' . $obj->id;
+            resolve('FileService')->uploadAttach($obj, $data['files'], $path);
+        }
     }
 
     public function prepareData(array $data, $obj = NULL)
@@ -40,13 +47,8 @@ class SiteService
             unset($data['user_id']);
         }
 
-        $options = collect();
-        if (isset($data['options'])) {
-            $folder = isset($obj) ? 'sites/' . $obj->id : 'sites';
-            $attributes = ['folder' => $folder];
-            $options = resolve('OptionService')->option_encode($data['options'], $attributes);
-        }
-        $data['options'] = $options;
+        $data['options'] = resolve('OptionService')->encode($data['options'] ?? []);
+
         return $data;
     }
 
