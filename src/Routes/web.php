@@ -11,6 +11,12 @@ Route::prefix('dashboard')
             ->name('sites.')
             ->group(function () {
                 Route::get('datatable', 'SiteController@datatables')->name('datatables');
+                Route::prefix('menus')
+                    ->name('menus.')
+                    ->group(function () {
+                        Route::get('datatable', 'SiteMenuController@datatables')->name('datatables');
+                    });
+                Route::resource('menus', 'SiteMenuController');
             });
         Route::resource('sites', 'SiteController');
     });

@@ -1,9 +1,8 @@
-<table class="table table-flush table-striped table-hover" id="sites-table">
+<table class="table table-flush table-striped table-hover" id="sites-menu-table">
     <thead class="thead-light">
     <tr>
         <th>Titulo</th>
-        <th>Domínios</th>
-        <th>Template</th>
+        <th>Url</th>
         <th></th>
     </tr>
     </thead>
@@ -12,10 +11,10 @@
 @push('scripts')
     <script>
         $(document).ready(function ($) {
-            $('#sites-table').DataTable({
+            $('#sites-menus-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('dashboard.sites.datatables') }}',
+                ajax: '{{ route('dashboard.sites.menus.datatables') }}',
                 keys: !0,
                 select: {
                     style: "multi"
@@ -35,12 +34,8 @@
                         name: 'title'
                     },
                     {
-                        data: 'domains',
-                        name: 'domains'
-                    },
-                    {
-                        data: 'template',
-                        name: 'template'
+                        data: 'route',
+                        name: 'route'
                     },
                     {
                         data: 'action',

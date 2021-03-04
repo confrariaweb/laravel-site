@@ -43,6 +43,25 @@ class CreateSitesTable extends Migration
                 ->on('sites')
                 ->onDelete('cascade');
         });
+
+        Schema::create('site_menus', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('site_id');
+            $table->unsignedBigInteger('user_id');
+            $table->string('menu');
+            $table->string('title');
+            $table->string('route');
+            $table->boolean('status')->default(true);
+            $table->foreign('site_id')
+                ->references('id')
+                ->on('sites')
+                ->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -52,6 +71,7 @@ class CreateSitesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('site_menus');
         Schema::dropIfExists('domain_site');
         Schema::dropIfExists('sites');
     }

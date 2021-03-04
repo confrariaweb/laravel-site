@@ -4,6 +4,7 @@ namespace ConfrariaWeb\Site\Models;
 
 use ConfrariaWeb\Account\Traits\AccountTrait;
 use ConfrariaWeb\File\Traits\FileTrait;
+use ConfrariaWeb\Site\Scopes\AccountSiteScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Site extends Model
@@ -19,6 +20,16 @@ class Site extends Model
     protected $casts = [
         'options' => 'collection',
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new AccountSiteScope);
+    }
 
     public function domains()
     {

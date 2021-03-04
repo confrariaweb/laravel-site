@@ -18,7 +18,7 @@ class SiteRepository implements SiteContract
         $this->obj = $site;
     }
 
-    protected function syncs($obj, $data)
+    protected function sync($obj, $data)
     {
         if (isset($data['domains'])) {
             $obj->domains()->sync($data['domains']);

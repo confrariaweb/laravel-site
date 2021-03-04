@@ -82,7 +82,8 @@ class SiteController extends Controller
      */
     public function store(StoreSiteRequest $request)
     {
-        $id = resolve('SiteService')->create($request->all())->id;
+        $site = resolve('SiteService')->create($request->all());
+        $id = $site->get('obj')->id;
         return redirect()->route('dashboard.sites.edit', $id)
             ->with('status', __('Site criado com sucesso!'));
     }
