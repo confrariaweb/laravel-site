@@ -4,21 +4,18 @@ namespace ConfrariaWeb\Site\Repositories;
 
 use ConfrariaWeb\Site\Contracts\SiteContract;
 use ConfrariaWeb\Site\Models\Site;
-use ConfrariaWeb\Vendor\Traits\RepositoryTrait;
+use ConfrariaWeb\Vendor\Repositories\Repository;
 use Illuminate\Database\Eloquent\Builder;
 
-class SiteRepository implements SiteContract
+class SiteRepository extends Repository implements SiteContract
 {
-    use RepositoryTrait;
 
-    public $site;
-
-    function __construct(Site $site)
+    public function __construct(Site $site)
     {
-        $this->obj = $site;
+        parent::__construct($site);
     }
 
-    protected function sync($obj, $data)
+    public function sync($obj, $data)
     {
         if (isset($data['domains'])) {
             $obj->domains()->sync($data['domains']);

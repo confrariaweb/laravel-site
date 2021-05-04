@@ -5,8 +5,8 @@ use App\Http\Controllers\Controller;
 
 class SiteController extends Controller
 {
-    private $data;
-    private $site;
+    public $data;
+    public $site;
 
     function __construct()
     {
@@ -15,10 +15,19 @@ class SiteController extends Controller
         $this->site = resolve('SiteService')->findByDomain($host);
     }
 
-    public function home()
+    public function index()
     {
-        abort_unless($this->site, 404);
-        abort_unless($this->site->template, 404);
+        $template = $this->site->template;
+        $template_path = $template->path;
+        $this->data = resolve($template->service)
+            ->setTemplate($template)
+            ->site('index');
+        return view('template-storage::' . $template_path . '.index', $this->data);
+    }
+
+    public function page($page, $slug = NULL)
+    {
+        dd('2', $this->site);
         return view(cwView('home.index'), $this->data);
     }
 

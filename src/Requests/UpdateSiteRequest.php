@@ -25,8 +25,7 @@ class UpdateSiteRequest extends FormRequest
     public function rules()
     {
         return [
-            'template_id' => 'required|integer',
-            'title' => 'required|max:255'
+
         ];
     }
 

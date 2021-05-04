@@ -16,7 +16,7 @@
   ],
   "require": {
     "confrariaweb/laravel-domain": "dev-master",
-    "confrariaweb/laravel-option": "dev-master",
+    "confrariaweb/laravel-file": "dev-master",
     "confrariaweb/laravel-template": "dev-master",
     "confrariaweb/laravel-vendor": "dev-master",
     "laravelcollective/html": ">=6.0",

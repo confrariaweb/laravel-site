@@ -15,51 +15,34 @@ class CreateSitesTable extends Migration
     {
         Schema::create('sites', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('template_id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('template_id')
+                ->constrained('templates')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->string('title');
             $table->boolean('status')->default(true);
             $table->json('options')->nullable();
-            $table->foreign('template_id')
-                ->references('id')
-                ->on('templates')
-                ->onDelete('cascade');
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
             $table->timestamps();
         });
 
         Schema::create('domain_site', function (Blueprint $table) {
-            $table->unsignedBigInteger('domain_id');
-            $table->unsignedBigInteger('site_id');
-            $table->foreign('domain_id')
-                ->references('id')
-                ->on('domains')
-                ->onDelete('cascade');
-            $table->foreign('site_id')
-                ->references('id')
-                ->on('sites')
-                ->onDelete('cascade');
+            $table->foreignId('domain_id')->constrained('domains')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('site_id')->constrained('sites')->onUpdate('cascade')->onDelete('cascade');
         });
 
         Schema::create('site_menus', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('site_id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('site_id')->constrained('sites')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('menu');
             $table->string('title');
             $table->string('route');
             $table->boolean('status')->default(true);
-            $table->foreign('site_id')
-                ->references('id')
-                ->on('sites')
-                ->onDelete('cascade');
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
             $table->timestamps();
         });
     }

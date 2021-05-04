@@ -1,9 +1,9 @@
 <table class="table table-flush table-striped table-hover" id="sites-table">
     <thead class="thead-light">
     <tr>
-        <th>Titulo</th>
-        <th>Domínios</th>
-        <th>Template</th>
+        <th>{{ __('title') }}</th>
+        <th>{{ __('domains') }}</th>
+        <th>{{ __('template') }}</th>
         <th></th>
     </tr>
     </thead>

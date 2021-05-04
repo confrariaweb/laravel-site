@@ -1,15 +1,6 @@
 <?php
 
 return [
-    'form' => [
-        'files' => [
-            'logotipo' => [
-                'name' => 'logotipo',
-                'type' => 'image',
-                'group' => 'logotipo',
-                'label' => 'Logotipo',
-                'placeholder' => 'Logotipo'
-            ]
-        ]
-    ]
+    'layout' => env('CW_LAYOUT', 'layouts.app'),
+    'views' => env('CW_VIEWS', 'site::'),
 ];

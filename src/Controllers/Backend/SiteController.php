@@ -15,8 +15,27 @@ class SiteController extends Controller
 
     function __construct()
     {
+        $this->data['page'] = 'general';
         $this->data['templates'] = resolve('TemplateService')->pluck('title');
         $this->data['domains'] = resolve('DomainService')->pluck('domain');
+        $this->data['metatags']['robots'] = [
+            'index' => '(index) Indexe esta página - exiba-a em seus resultados de busca',
+            'noindex' => '(noindex) Não indexe esta página - não a exiba nos resultados de busca. Útil para páginas como de login e acesso à intranet',
+            'follow' => '(follow) Siga os links desta pagina para descobrir novas páginas (reveja Googlebot, robots)',
+            'nofollow' => '(nofollow) Nenhum dos links desta página deve ser seguido',
+            'nosnippet' => '(nosnippet) Orienta o site de busca a não exibir a descrição da página nos resultados de busca',
+            'noodp' => '(noodp) Orienta o Google não utilizar a descrição do diretório DMOZ em seus resultados (snippet)',
+            'noarchive' => '(noarchive) Instrui o Google a não exibir a versão em cache da página',
+            'noimageindex' => '(noimageindex) Não indexe nehuma imagem da página'
+        ];
+        $this->data['socialnetworks'] = [
+            'facebook' => 'Facebook',
+            'instagram' => 'Instagram',
+            'twitter' => 'Twitter',
+            'linkedin' => 'Linkedin',
+            'youtube' => 'Youtube',
+            'pinterest' => 'Pinterest',
+        ];
     }
 
     public function datatables()
@@ -27,7 +46,7 @@ class SiteController extends Controller
                 return !$site->template ? NULL : $site->template->title;
             })
             ->addColumn('domains', function ($site) {
-                return !$site->domains ? NULL : $site->domains->implode('domain', '<br>');
+                return $site->domains->count() > 0 ? $site->domains->implode('domain', '<br>') : __('without domain');
             })
             ->addColumn('action', function ($site) {
                 return '<div class="btn-group btn-group-sm float-right" role="group">
@@ -60,7 +79,7 @@ class SiteController extends Controller
     public function index()
     {
         $this->data['sites'] = resolve('SiteService')->all();
-        return view(cwView('sites.index', true), $this->data);
+        return view(config('cw_site.views', 'site::') . 'sites.index', $this->data);
     }
 
     /**
@@ -70,8 +89,7 @@ class SiteController extends Controller
      */
     public function create()
     {
-        $this->data['files'] = Config::get('cw_site.form.files');
-        return view(cwView('sites.create', true), $this->data);
+        return view(config('cw_site.views', 'site::') . 'sites.create', $this->data);
     }
 
     /**
@@ -83,6 +101,12 @@ class SiteController extends Controller
     public function store(StoreSiteRequest $request)
     {
         $site = resolve('SiteService')->create($request->all());
+
+        if($site->get('error')){
+            return back()
+                ->with('status', $site->get('status'))
+                ->withInput();
+        }
         $id = $site->get('obj')->id;
         return redirect()->route('dashboard.sites.edit', $id)
             ->with('status', __('Site criado com sucesso!'));
@@ -105,12 +129,11 @@ class SiteController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, $page = 'general')
     {
-        $this->data['files'] = Config::get('cw_site.form.files');
-        $this->data['site'] = $site = resolve('SiteService')->find($id);
-        $this->data['options'] = resolve('SiteService')->getOptions($site);
-        return view(cwView('sites.edit', true), $this->data);
+        $this->data['page'] = $page;
+        $this->data['site'] = resolve('SiteService')->find($id);
+        return view(config('cw_site.views', 'site::') . 'sites.edit', $this->data);
     }
 
     /**
@@ -122,7 +145,13 @@ class SiteController extends Controller
      */
     public function update(UpdateSiteRequest $request, $id)
     {
-        resolve('SiteService')->update($request->all(), $id);
+        //dd($request->all());
+        $site = resolve('SiteService')->update($request->all(), $id);
+        if($site->get('error')){
+            return back()
+                ->with('status', $site->get('status'))
+                ->withInput();
+        }
         return redirect()->route('dashboard.sites.edit', $id)
             ->with('status', __('Site editado com sucesso!'));
     }

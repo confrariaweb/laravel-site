@@ -4,7 +4,6 @@ namespace ConfrariaWeb\Site\Models;
 
 use ConfrariaWeb\Account\Traits\AccountTrait;
 use ConfrariaWeb\File\Traits\FileTrait;
-use ConfrariaWeb\Site\Scopes\AccountSiteScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Site extends Model
@@ -28,7 +27,7 @@ class Site extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope(new AccountSiteScope);
+        //static::addGlobalScope(new AccountSiteScope);
     }
 
     public function domains()
@@ -44,6 +43,19 @@ class Site extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    public function getMetaTagsAttribute()
+    {
+        if(isset($this->options)){
+            return $this->options->get('metatags')?? NULL;
+        } 
+        return NULL;
+    }
+
+    public function setMetaTagsAttribute($value)
+    {
+        $this->attributes['options']['metatags'] = $value;
     }
 
 }
