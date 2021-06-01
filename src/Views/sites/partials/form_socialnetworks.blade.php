@@ -6,7 +6,7 @@
       
   <div id="inputs-social-networks">
     @foreach($site->options['socialnetworks'] as $socialnetwork)
-        @include('site::sites.partials.form_socialnetworks_input')
+        @include('site::sites.partials.form_socialnetworks_input', ['key' => $loop->index])
     @endforeach
 </div>
 <div class="row">

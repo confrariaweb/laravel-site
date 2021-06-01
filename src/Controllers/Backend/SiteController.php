@@ -17,7 +17,7 @@ class SiteController extends Controller
     {
         $this->data['page'] = 'general';
         $this->data['templates'] = resolve('TemplateService')->pluck('title');
-        $this->data['domains'] = resolve('DomainService')->pluck('domain');
+        $this->data['domains'] = resolve('DomainService')->pluck('domain', 'id');
         $this->data['metatags']['robots'] = [
             'index' => '(index) Indexe esta página - exiba-a em seus resultados de busca',
             'noindex' => '(noindex) Não indexe esta página - não a exiba nos resultados de busca. Útil para páginas como de login e acesso à intranet',
